@@ -28,7 +28,7 @@ namespace SharpDox.Console
             if(CommandLine.Parser.Default.ParseArguments(commandLineArgs, options))
             {
                 // prio 1: config, ignores all other arguments
-                if (!string.IsNullOrWhiteSpace(options.ConfgFilename))
+                if(!string.IsNullOrWhiteSpace(options.ConfgFilename))
                 {
                     _configController.Load(options.ConfgFilename);
                     _buildMessenger.OnBuildMessage += System.Console.WriteLine;
@@ -38,9 +38,7 @@ namespace SharpDox.Console
                 }
                 else
                 {
-                    _configController.Load(options.ConfgFilename);
-                    _buildMessenger.OnBuildMessage += System.Console.WriteLine;
-                    _builderFactory().StartBuild(_configController.GetConfigSection<ICoreConfigSection>(), false);
+                    // TODO: build config here with parameters
                 }
             }
 
