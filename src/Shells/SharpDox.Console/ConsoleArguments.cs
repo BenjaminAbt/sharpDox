@@ -11,7 +11,7 @@ namespace SharpDox.Console
     /// 
     /// Examples: -param1 value1 --param2 /param3:"Test-:-work" /param4=happy -param5 '--=nice=--'
     /// </summary>
-    public class ConsoleArguments : StringDictionary
+    public sealed class ConsoleArguments : StringDictionary
     {
         private readonly Regex _nameValueRegex = new Regex(@"^([/-]|--){1}(?<name>\w+)([:=])?(?<value>.+)?$", RegexOptions.Compiled);
 

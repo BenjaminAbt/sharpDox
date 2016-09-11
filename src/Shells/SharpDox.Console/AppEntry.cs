@@ -17,11 +17,10 @@ namespace SharpDox.Console
                 mainContainerConfig.RegisterAsSelf<SDConsole>();
                 mainContainerConfig.RegisterStrings<SDConsoleStrings>();
                 var mainContainer = mainContainerConfig.BuildContainer();
-                
-                mainContainer.Resolve<SDConsole>().Start(args);
-                exitCode = 0;
+
+                exitCode = mainContainer.Resolve<SDConsole>().Start(args);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Trace.TraceError(ex.ToString());
             }

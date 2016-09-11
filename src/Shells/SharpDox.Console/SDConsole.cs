@@ -9,8 +9,6 @@ namespace SharpDox.Console
         private readonly Func<BuildController> _builderFactory;
         private readonly IConfigController _configController;
 
-        private BuildController _buildController;
-        private ConsoleArguments _arguments;
         private readonly BuildMessenger _buildMessenger;
         private readonly SDConsoleStrings _strings;
 
@@ -22,30 +20,32 @@ namespace SharpDox.Console
             _builderFactory = builderFactory;
         }
 
-        public void Start(string[] args)
+        public int Start(string[] args)
         {
-            _arguments = new ConsoleArguments(args);
+            ConsoleArguments arguments = new ConsoleArguments(args);
 
-            if (_arguments["config"] != null)
-            {
-                _configController.Load(_arguments["config"]);
-                _buildController = _builderFactory();
-
-                _buildMessenger.OnBuildMessage += System.Console.WriteLine;
-
-                _buildController.StartBuild(_configController.GetConfigSection<ICoreConfigSection>(), false);
-            }
-            else
+            if(arguments["config"] == null)
             {
                 System.Console.WriteLine(_strings.ConfigMissing + " -config " + _strings.Path);
+                return -1;
             }
 
-            #if DEBUG
+            BuildController buildController = _builderFactory();
+
+            _configController.Load(arguments["config"]);
+
+            _buildMessenger.OnBuildMessage += System.Console.WriteLine;
+
+            buildController.StartBuild(_configController.GetConfigSection<ICoreConfigSection>(), false);
+
+#if DEBUG
             System.Console.WriteLine(_strings.PressToEnd);
             System.Console.ReadLine();
-            #endif
+#endif
+
+            return 0;
         }
-        
-        public bool IsGui { get { return false; } }
+
+        public bool IsGui => false;
     }
 }
