@@ -15,7 +15,6 @@ namespace SharpDox.Console
             {
                 var mainContainerConfig = new MainContainerConfig();
                 mainContainerConfig.RegisterAsSelf<SDConsole>();
-                mainContainerConfig.RegisterStrings<SDConsoleStrings>();
                 var mainContainer = mainContainerConfig.BuildContainer();
 
                 exitCode = mainContainer.Resolve<SDConsole>().Start(args);

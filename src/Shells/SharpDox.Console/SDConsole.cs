@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using SharpDox.Build;
 using SharpDox.Sdk.Config;
+using static System.String;
 
 namespace SharpDox.Console
 {
@@ -8,42 +11,48 @@ namespace SharpDox.Console
     {
         private readonly Func<BuildController> _builderFactory;
         private readonly IConfigController _configController;
-
         private readonly BuildMessenger _buildMessenger;
-        private readonly SDConsoleStrings _strings;
 
-        public SDConsole(SDConsoleStrings strings, IConfigController configController, BuildMessenger buildMessenger, Func<BuildController> builderFactory)
+        public SDConsole(IConfigController configController, BuildMessenger buildMessenger, Func<BuildController> builderFactory)
         {
-            _strings = strings;
             _buildMessenger = buildMessenger;
             _configController = configController;
             _builderFactory = builderFactory;
         }
 
-        public int Start(string[] args)
+        public int Start(string[] commandLineArgs)
         {
-            ConsoleArguments arguments = new ConsoleArguments(args);
+            int exitCode;
 
-            if(arguments["config"] == null)
+            SDoxConsoleCommandLineOptions options = new SDoxConsoleCommandLineOptions();
+            if(CommandLine.Parser.Default.ParseArguments(commandLineArgs, options))
             {
-                System.Console.WriteLine(_strings.ConfigMissing + " -config " + _strings.Path);
-                return -1;
+                // prio 1: config, ignores all other arguments
+                if (!string.IsNullOrWhiteSpace(options.ConfgFilename))
+                {
+                    _configController.Load(options.ConfgFilename);
+                    _buildMessenger.OnBuildMessage += System.Console.WriteLine;
+                    _builderFactory().StartBuild(_configController.GetConfigSection<ICoreConfigSection>(), false);
+
+                    exitCode = 0;
+                }
+                else
+                {
+                    _configController.Load(options.ConfgFilename);
+                    _buildMessenger.OnBuildMessage += System.Console.WriteLine;
+                    _builderFactory().StartBuild(_configController.GetConfigSection<ICoreConfigSection>(), false);
+                }
             }
 
-            BuildController buildController = _builderFactory();
+            exitCode = 0;
 
-            _configController.Load(arguments["config"]);
-
-            _buildMessenger.OnBuildMessage += System.Console.WriteLine;
-
-            buildController.StartBuild(_configController.GetConfigSection<ICoreConfigSection>(), false);
 
 #if DEBUG
-            System.Console.WriteLine(_strings.PressToEnd);
+            System.Console.WriteLine("Done. Press enter to exit debug.");
             System.Console.ReadLine();
 #endif
 
-            return 0;
+            return exitCode;
         }
 
         public bool IsGui => false;
