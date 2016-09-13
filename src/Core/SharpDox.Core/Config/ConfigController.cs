@@ -44,6 +44,8 @@ namespace SharpDox.Core.Config
         {
             if (File.Exists(fileToLoad))
             {
+                // TODO: you should avoid set Environment.CurrentDirectory
+                // this causes often side effects and normally there is no need to set this
                 Environment.CurrentDirectory = Path.GetDirectoryName(fileToLoad);
 
                 ResetConfigs();
