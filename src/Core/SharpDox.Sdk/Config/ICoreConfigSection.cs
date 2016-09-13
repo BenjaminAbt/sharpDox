@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace SharpDox.Sdk.Config
 {
@@ -12,20 +13,8 @@ namespace SharpDox.Sdk.Config
     ///     Alle Basis-Einstellungen für sharpDox.
     ///     </summary>
     /// </de>
-    public interface ICoreConfigSection : IConfigSection
+    public interface ICoreConfigSection : IConfigSection, INotifyPropertyChanged
     {
-        /// <default>
-        ///     <summary>
-        ///     Returns whether the actual configuration is saved or not.
-        ///     </summary>
-        /// </default>
-        /// <de>
-        ///     <summary>
-        ///     Liefert einen Wert der angibt, ob die Konfiguration gespeichert ist.
-        ///     </summary>
-        /// </de>
-        bool IsSaved { get; set; }
-
         /// <default>
         ///     <summary>
         ///     Returns the author.
@@ -61,18 +50,6 @@ namespace SharpDox.Sdk.Config
         ///     </summary>
         /// </de>
         string ProjectUrl { get; set; }
-
-        /// <default>
-        ///     <summary>
-        ///     Returns the name of the configuration file.
-        ///     </summary>
-        /// </default>
-        /// <de>
-        ///     <summary>
-        ///     Liefert den Namen der Konfigurationsdatei.
-        ///     </summary>
-        /// </de>
-        string ConfigFileName { get; set; }
 
         /// <default>
         ///     <summary>

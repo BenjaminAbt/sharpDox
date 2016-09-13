@@ -50,6 +50,7 @@
     <Compile Include="Config\IConfigController.cs" />
     <Compile Include="Config\IConfigSection.cs" />
     <Compile Include="Config\ICoreConfigSection.cs" />
+    <Compile Include="Config\ISaveableConfig.cs" />
     <Compile Include="Config\Lists\ComboBoxList.cs" />
     <Compile Include="Config\Lists\CheckBoxList.cs" />
     <Compile Include="Exporter\IExporter.cs" />

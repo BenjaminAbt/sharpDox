@@ -61,6 +61,7 @@
     <Compile Include="Config\CoreStrings.cs" />
     <Compile Include="Config\CoreConfigSection.cs" />
     <Compile Include="Config\LanguageList.cs" />
+    <Compile Include="Config\SaveableConfigSection.cs" />
     <Compile Include="Local\LocalController.cs" />
     <Compile Include="Local\LocalCreator.cs" />
     <Compile Include="Local\LocalLoader.cs" />

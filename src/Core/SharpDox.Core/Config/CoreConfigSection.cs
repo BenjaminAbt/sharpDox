@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using SharpDox.Sdk;
 using SharpDox.Sdk.Config;
 using SharpDox.Sdk.Config.Attributes;
@@ -10,11 +11,7 @@ namespace SharpDox.Core.Config
     [Name(typeof (CoreStrings), "ConfigTitle")]
     public class CoreConfigSection : ICoreConfigSection
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private bool _isSaved;
         private string _author;
-        private string _configFileName;
         private SDPath _inputFile;
         private SDPath _outputPath;
         private SDPath _logoPath;
@@ -28,40 +25,7 @@ namespace SharpDox.Core.Config
         private bool _excludeInternal;
         private ObservableCollection<string> _excludedIdentifiers;
         private ObservableCollection<string> _activatedExporters;
-
-        private readonly CoreStrings _strings;
-
-        public CoreConfigSection(CoreStrings strings)
-        {
-            _strings = strings;
-        }
-
-        public bool IsSaved
-        {
-            get { return _isSaved; }
-            set
-            {
-                if (_isSaved != value)
-                {
-                    _isSaved = value;
-                    OnPropertyChanged(nameof(IsSaved));
-                }
-            }
-        }
-
-        public string ConfigFileName
-        {
-            get { return string.IsNullOrEmpty(_configFileName) ? _strings.NewConfig : _configFileName; }
-            set
-            {
-                if (_configFileName != value)
-                {
-                    _configFileName = value;
-                    OnPropertyChanged(nameof(ConfigFileName));
-                }
-            }
-        }
-
+       
         [Required]
         [Name(typeof(CoreStrings), nameof(ProjectName))]
         public string ProjectName
@@ -72,7 +36,7 @@ namespace SharpDox.Core.Config
                 if (_projectName != value)
                 {
                     _projectName = value;
-                    OnPropertyChanged(nameof(ProjectName));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -86,7 +50,7 @@ namespace SharpDox.Core.Config
                 if (_projectUrl != value)
                 {
                     _projectUrl = value;
-                    OnPropertyChanged(nameof(ProjectUrl));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -100,7 +64,7 @@ namespace SharpDox.Core.Config
                 if (_author != value)
                 {
                     _author = value;
-                    OnPropertyChanged(nameof(Author));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -114,7 +78,7 @@ namespace SharpDox.Core.Config
                 if (_authorUrl != value)
                 {
                     _authorUrl = value;
-                    OnPropertyChanged(nameof(AuthorUrl));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -128,7 +92,7 @@ namespace SharpDox.Core.Config
                 if (_versionNumber != value)
                 {
                     _versionNumber = value;
-                    OnPropertyChanged(nameof(VersionNumber));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -143,7 +107,7 @@ namespace SharpDox.Core.Config
                 if (_logoPath != value)
                 {
                     _logoPath = value;
-                    OnPropertyChanged(nameof(LogoPath));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -159,7 +123,7 @@ namespace SharpDox.Core.Config
                 if (_inputFile != value)
                 {
                     _inputFile = value;
-                    OnPropertyChanged(nameof(InputFile));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -175,7 +139,7 @@ namespace SharpDox.Core.Config
                 if (_outputPath != value)
                 {
                     _outputPath = value;
-                    OnPropertyChanged(nameof(OutputPath));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -191,7 +155,7 @@ namespace SharpDox.Core.Config
                 if (_docLanguage != value)
                 {
                     _docLanguage = value;
-                    OnPropertyChanged(nameof(DocLanguage));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -204,7 +168,7 @@ namespace SharpDox.Core.Config
                 if (_excludePrivate != value)
                 {
                     _excludePrivate = value;
-                    OnPropertyChanged(nameof(ExcludePrivate));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -217,7 +181,7 @@ namespace SharpDox.Core.Config
                 if (_excludeProtected != value)
                 {
                     _excludeProtected = value;
-                    OnPropertyChanged(nameof(ExcludeProtected));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -230,7 +194,7 @@ namespace SharpDox.Core.Config
                 if (_excludeInternal != value)
                 {
                     _excludeInternal = value;
-                    OnPropertyChanged(nameof(ExcludeInternal));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -243,8 +207,8 @@ namespace SharpDox.Core.Config
             {
                 _excludedIdentifiers = value;
                 if (_excludedIdentifiers != null)
-                    _excludedIdentifiers.CollectionChanged += (s, a) => OnPropertyChanged(nameof(ExcludedIdentifiers));
-                OnPropertyChanged(nameof(ExcludedIdentifiers));
+                    _excludedIdentifiers.CollectionChanged += (s, a) => OnPropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -257,8 +221,8 @@ namespace SharpDox.Core.Config
             {
                 _activatedExporters = value;
                 if (_activatedExporters != null)
-                    _activatedExporters.CollectionChanged += (s, a) => OnPropertyChanged(nameof(ActivatedExporters));
-                OnPropertyChanged(nameof(ActivatedExporters));
+                    _activatedExporters.CollectionChanged += (s, a) => OnPropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -267,10 +231,11 @@ namespace SharpDox.Core.Config
             get { return new Guid("FEACBCE2-8290-4D90-BB05-373B9D7DBBFC"); }
         }
 
-        protected void OnPropertyChanged(string propertyName)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

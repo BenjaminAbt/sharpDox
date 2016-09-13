@@ -13,7 +13,7 @@ namespace SharpDox.Sdk.Config
     ///     Plugins, die Konfigurationseinstellungen benötigen, können dieses Interface implementieren.
     ///     </summary>
     /// </de>
-    public interface IConfigSection : INotifyPropertyChanged
+    public interface IConfigSection
     {
         /// <default>
         ///     <summary>
